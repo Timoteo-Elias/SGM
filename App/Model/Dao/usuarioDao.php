@@ -8,11 +8,11 @@
         public function create(Usuario $u) {
             try {
                 $sql = "INSERT INTO usuario (nome, email, perfil, senha, imagem) VALUES (?, ?, ?, ?, ?)";
-                $stmt = Connect::getConn()->prepare($sql);
+                $res = Connect::getConn()->prepare($sql);
 
                 $senhaHash = password_hash($u->getSenha(), PASSWORD_DEFAULT);
 
-                return $stmt->execute([
+                return $res->execute([
                     $u->getNome(),
                     $u->getEmail(),
                     $u->getPerfil(),
@@ -31,13 +31,16 @@
         }
        
         public function findByEmail($email) {
-            $sql = "SELECT id_user FROM usuario WHERE email = ?";
-            $stmt = Connect::getConn()->prepare($sql);
-            $stmt->bindValue(1, $email);
-            $stmt->execute();
+            $sql = "SELECT * FROM usuario WHERE email = ?";
+            $res = Connect::getConn()->prepare($sql);
+            $res->bindValue(1, $email);
+            $res->execute();
 
-            // Devolve true se encontrar algum registo, false caso contrário
-            return $stmt->rowCount() > 0;
+            if ($res->rowCount() > 0) {
+                return $res->fetch(\PDO::FETCH_ASSOC); // Retorna os dados (id, nome, email, senha, perfil, etc.)
+            }
+
+            return false; // Retorna false se não encontrar nenhum e-mail
         }
 
         public function read(){

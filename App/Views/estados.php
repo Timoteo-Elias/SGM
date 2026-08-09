@@ -1,21 +1,14 @@
 <?php
     include_once(__DIR__ . '/Auth.php');
-    require_once __DIR__ . '/../Controller/FalecidoController.php';
-    require_once __DIR__ . '/../Model/Dao/falecidoDao.php';
-    require_once __DIR__ . '/../Model/falecido.php';
-    use Model\Falecido;
-    // 2. INSTANCIAR AS CAMADAS (O "Motor" do MVC)
-    // (Ajusta a forma como geras a tua conexão PDO se usares uma classe própria)
-    $falecidoDao = new FalecidoDao(); 
-    $FalecidoController = new FalecidoController($falecidoDao);
-    // 3. CRIAR A VARIÁVEL QUE A TABELA PRECISA
-    // Chamamos o método do controller para recolher os dados do banco
-    $falecidos = $FalecidoController->index(); 
-    // Daqui para baixo, o teu HTML/Bootstrap continua exatamente igual...
-
+    require_once __DIR__ . '/../Model/Estados.php'; 
+    require_once __DIR__ . '/../Controller/EstadosController.php';
+    require_once __DIR__ . '/../Model/Dao/estadosDao.php';
+    use Model\Estados;
     if (session_status() === PHP_SESSION_NONE) {
         session_start(); 
     }
+    $estadosController = new EstadosController();
+    $estados = $estadosController->index();
 
 ?>
 <!DOCTYPE html>
@@ -27,9 +20,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="../../Public/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../Public/bootstrap-icons/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
     <script src="../../Public/js/bootstrap.min.js"></script>
     <style>
         :root{
@@ -97,7 +90,7 @@
         }
         .dashboard-card{
             background:var(--card);
-            padding:20px;
+            padding:15px;
             border-radius:15px;
             border:1px solid var(--border);
         }
@@ -199,17 +192,46 @@
         <!-- CONTENT -->
         <main class="content">
             <?php include_once('assets/header.php') ?>
+            <?php include_once('assets/painel.php') ?>
 
-           <?php include_once('assets/painel.php') ?>
-           
+            
+            <!-- CARDS -->
+            <div class="row g-4">
+                <div class="col-xl-4 col-md-6">
+                    <div class="dashboard-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h2>5</h2>
+                            <i class="bi bi-bullseye"></i>
+                        </div>
+                        <p>Total de Estados Ativos</p>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6">
+                    <div class="dashboard-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h2>5</h2>
+                            <i class="bi bi-inboxes-fill"></i>
+                        </div>
+                        <p>Gavetas Disponíveis</p>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6">
+                    <div class="dashboard-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h2>5</h2>
+                            <i class="bi bi-square-fill"></i>
+                        </div>
+                        <p>Camaras Ocupadas</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- DESKTOP TABLE -->
             <div class="table-section mt-4">
                 <div class="d-flex justify-content-between mb-3">
-                    <h5>Lista de Falecidos</h5>
-                    <div>
-                        <a href="" class="btn btn-outline-danger me-3"> <i class="bi bi-fille-pdf"></i> imprimir</a>
-                    
-                        <a href="add_falecido.php" class="btn btn-outline-primary"> <i class="bi bi-plus"></i> Registrar</a>
+                    <h5>Estados</h5>
+                    <div>                    
+                        <a href="add_estados.php" class="btn btn-outline-primary"> <i class="bi bi-plus"></i> Novo Estado</a>
                     </div>
                 </div>
                 <?php if (isset($_SESSION['sucesso'])): ?>
@@ -222,6 +244,17 @@
                     unset($_SESSION['sucesso']); 
                     ?>
                 <?php endif; ?>
+
+                <?php if (isset($_SESSION['erro'])): ?>
+                    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                        <strong>✗ Erro!</strong> <?= $_SESSION['erro']; ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <?php 
+                    // IMPORTANTE: Limpa a mensagem para ela não reaparecer se o utilizador atualizar a página (F5)
+                    unset($_SESSION['erro']); 
+                    ?>
+                <?php endif; ?>               
 
                 <?php if (isset($_SESSION['delete'])): ?>
                     <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
@@ -248,33 +281,23 @@
                     <table class="table table-striped table-dark">
                         <thead>
                             <tr>
-                                <th>Código</th>
-                                <th>Nome</th>
-                                <th>Sexo</th>
-                                <th>BI</th>
-                                <th>Idade</th>
-                                <th>Nacionalidade</th>
-                                <th>Nome do Pai</th>
-                                <th>Nome da Mãe</th>
-                                <th></th>
+                                <th>ID</th>
+                                <th>Categoria</th>
+                                <th>Nome do Estado</th>
+                                <th>Descrição</th>
+                                <th>Ação</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($falecidos as $trim):?>
+                           <?php foreach ($estados as $estado): ?>
                                 <tr>
-                                    <td><?= $trim['codigo'] ?></td>
-                                    <td><?= $trim['nome_completo'] ?></td>
-                                    <td><?= $trim['sexo'] ?></td>
-                                    <td><?= $trim['bi'] ?></td>
-                                    <td><?= !empty($trim['idade']) ? $trim['idade'] . ' Anos' : 'Idade Desconhecida' ?></td>
-                                    <td><?= $trim['nacionalidade'] ?></td>
-                                    <td><?= $trim['pai'] ?></td>
-                                    <td><?= $trim['mae'] ?></td>
-                                    <td class="d-flex">
-                                        <a href="#" class="nav-link me-2"><i class="bi bi-eye-fill text-primary"> </i></a>
-                                        <a href="edit_falecido.php?id=<?= $trim['id_falecido'] ?>" class="nav-link me-2"><i class="bi bi-pen-fill text-success"></i></a>
-
-                                        <a href="../index.php?id=<?= $trim['id_falecido'] ?>" class="nav-link"><i class="bi bi-trash3-fill text-danger "></i></a>
+                                    <td><?= htmlspecialchars($estado['id_estado']) ?></td>
+                                    <td><?= htmlspecialchars($estado['tipo']) ?></td>
+                                    <td><?= htmlspecialchars($estado['nome']) ?></td>
+                                    <td><?= htmlspecialchars($estado['descricao']) ?></td>
+                                    <td>
+                                        <a href="edit_estado.php?id=<?= $estado['id_estado'] ?>" class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i> Editar</a>
+                                        <a href="delete_estado.php?id=<?= $estado['id_estado'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este estado?');"> <i class="bi bi-trash"></i> Excluir</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -287,27 +310,15 @@
                         <table class="table table-striped table-dark">
                             <thead>
                                 <tr>
-                                    <th>Código</th>
-                                    <th>Nome</th>
-                                    <th>BI</th>
-                                    <th></th>
+                                    <th>ID</th>
+                                    <th>Nome do Estado</th>
+                                    <th>Categoria</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach($falecidos as $trim):?>
-                                    <tr>
-                                        <td><?= $trim['codigo'] ?></td>
-                                        <td><?= $trim['nome_completo'] ?></td>
-                                        <td><?= $trim['bi'] ?></td>
-                                        <td>
-                                            <a href="#" class="nav-link"><i class="bi bi-eye-fill "> </i></a>
-
-                                            <a href="../index.php?id=<?= $trim['id_falecido'] ?>" class="nav-link"><i class="bi bi-trash3-fill text-danger "> </i></a>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
+                                
                             </tbody>
-                        </table>                       
+                        </table>            
                     </div>
                 </div>
             </div>

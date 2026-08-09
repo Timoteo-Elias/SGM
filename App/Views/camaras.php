@@ -1,21 +1,15 @@
 <?php
     include_once(__DIR__ . '/Auth.php');
-    require_once __DIR__ . '/../Controller/FalecidoController.php';
-    require_once __DIR__ . '/../Model/Dao/falecidoDao.php';
-    require_once __DIR__ . '/../Model/falecido.php';
-    use Model\Falecido;
-    // 2. INSTANCIAR AS CAMADAS (O "Motor" do MVC)
-    // (Ajusta a forma como geras a tua conexão PDO se usares uma classe própria)
-    $falecidoDao = new FalecidoDao(); 
-    $FalecidoController = new FalecidoController($falecidoDao);
-    // 3. CRIAR A VARIÁVEL QUE A TABELA PRECISA
-    // Chamamos o método do controller para recolher os dados do banco
-    $falecidos = $FalecidoController->index(); 
-    // Daqui para baixo, o teu HTML/Bootstrap continua exatamente igual...
-
+    require_once __DIR__ . '/../Model/Camara.php'; 
+    require_once __DIR__ . '/../Controller/CamaraController.php';
+    require_once __DIR__ . '/../Model/Dao/camaraDao.php';
+    use Model\Estados;
     if (session_status() === PHP_SESSION_NONE) {
         session_start(); 
     }
+    $camaraController = new CamaraController();
+
+    $camaras = $camaraController->index();
 
 ?>
 <!DOCTYPE html>
@@ -27,9 +21,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="../../Public/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../Public/bootstrap-icons/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
     <script src="../../Public/js/bootstrap.min.js"></script>
     <style>
         :root{
@@ -55,11 +49,7 @@
         }
         .logo-area{
             text-align:center;
-            margin-bottom:40px;
-        }
-        .logo-icon{
-            font-size:50px;
-            color:var(--primary);
+            margin-bottom:20px;
         }
         .menu{
             list-style:none;
@@ -97,13 +87,13 @@
         }
         .dashboard-card{
             background:var(--card);
-            padding:20px;
-            border-radius:15px;
+            padding:10px;
+            border-radius:10px;
             border:1px solid var(--border);
         }
         .dashboard-card i{
             color:var(--primary);
-            font-size:35px;
+            font-size:30px;
         }
         .table-section{
             background:var(--card);
@@ -199,17 +189,13 @@
         <!-- CONTENT -->
         <main class="content">
             <?php include_once('assets/header.php') ?>
+            <?php include_once('assets/painel.php') ?>
 
-           <?php include_once('assets/painel.php') ?>
-           
-            <!-- DESKTOP TABLE -->
-            <div class="table-section mt-4">
-                <div class="d-flex justify-content-between mb-3">
-                    <h5>Lista de Falecidos</h5>
-                    <div>
-                        <a href="" class="btn btn-outline-danger me-3"> <i class="bi bi-fille-pdf"></i> imprimir</a>
-                    
-                        <a href="add_falecido.php" class="btn btn-outline-primary"> <i class="bi bi-plus"></i> Registrar</a>
+             <div class="table-section mt-4">
+                <div class="d-flex justify-content-between">
+                    <h5>Gestão de Câmaras</h5>
+                    <div>                    
+                        <a href="add_camara.php" class="btn btn-outline-primary"> <i class="bi bi-plus"></i> Nova Câmara</a>
                     </div>
                 </div>
                 <?php if (isset($_SESSION['sucesso'])): ?>
@@ -220,6 +206,17 @@
                     <?php 
                     // IMPORTANTE: Limpa a mensagem para ela não reaparecer se o utilizador atualizar a página (F5)
                     unset($_SESSION['sucesso']); 
+                    ?>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['erro'])): ?>
+                    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                        <strong>✗ Erro!</strong> <?= $_SESSION['erro']; ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <?php 
+                    // IMPORTANTE: Limpa a mensagem para ela não reaparecer se o utilizador atualizar a página (F5)
+                    unset($_SESSION['erro']); 
                     ?>
                 <?php endif; ?>
 
@@ -244,71 +241,72 @@
                     unset($_SESSION['atualizado']); 
                     ?>
                 <?php endif; ?>
-                <div class="table-responsive desktop-table">
-                    <table class="table table-striped table-dark">
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Nome</th>
-                                <th>Sexo</th>
-                                <th>BI</th>
-                                <th>Idade</th>
-                                <th>Nacionalidade</th>
-                                <th>Nome do Pai</th>
-                                <th>Nome da Mãe</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach($falecidos as $trim):?>
-                                <tr>
-                                    <td><?= $trim['codigo'] ?></td>
-                                    <td><?= $trim['nome_completo'] ?></td>
-                                    <td><?= $trim['sexo'] ?></td>
-                                    <td><?= $trim['bi'] ?></td>
-                                    <td><?= !empty($trim['idade']) ? $trim['idade'] . ' Anos' : 'Idade Desconhecida' ?></td>
-                                    <td><?= $trim['nacionalidade'] ?></td>
-                                    <td><?= $trim['pai'] ?></td>
-                                    <td><?= $trim['mae'] ?></td>
-                                    <td class="d-flex">
-                                        <a href="#" class="nav-link me-2"><i class="bi bi-eye-fill text-primary"> </i></a>
-                                        <a href="edit_falecido.php?id=<?= $trim['id_falecido'] ?>" class="nav-link me-2"><i class="bi bi-pen-fill text-success"></i></a>
+            </div>
+            
+            <!-- CARDS -->
+            <div class="row g-4 mt-2">
+                <?php foreach ($camaras as $camara): 
+                    $total = $camara['capacidade'];
+                    $ocupadas = $camara['quantidade_gavetas_criadas'];
+                    $livres = $camara['capacidade_livre'];
+                    
+                    // Cálculo da percentagem de ocupação
+                    $percentagem = ($total > 0) ? round(($ocupadas / $total) * 100) : 0;
+                    ?>
+                    <div class="col-xl-4 col-md-6">
+                        <div class="dashboard-card">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="text-muted"><?= htmlspecialchars($camara['codigo']); ?></h6>
+                                <?php if (strtolower($camara['estado']) === 'avariada'): ?>
+                                    <span class="badge bg-danger pt-0 p-1">
+                                        <?= htmlspecialchars($camara['estado']); ?>      
+                                    </span>
+                                <?php elseif (strtolower($camara['estado']) === 'operacional'): ?>
+                                    <span class="badge bg-success pt-0 p-1">
+                                        <?= htmlspecialchars($camara['estado']); ?>      
+                                    </span>
+                                <?php elseif (strtolower($camara['estado']) === 'manutenção'): ?>
+                                    <span class="badge bg-warning pt-0 p-1">
+                                        <?= htmlspecialchars($camara['estado']); ?>      
+                                    </span>
+                            <?php endif; ?>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <h2><?= htmlspecialchars($camara['temperatura']); ?><span>ºC</span></h2>
+                                <?php if (strtolower($camara['estado']) === 'avariada'): ?>
+                                    <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                                <?php elseif (strtolower($camara['estado']) === 'operacional'): ?>
+                                    <i class="bi bi-graph-up-arrow text-success"></i>
+                                <?php elseif (strtolower($camara['estado']) === 'manutenção'): ?>
+                                    <i class="bi bi-tools text-warning"></i>
+                                <?php endif; ?>
+                                
+                            </div>
 
-                                        <a href="../index.php?id=<?= $trim['id_falecido'] ?>" class="nav-link"><i class="bi bi-trash3-fill text-danger "></i></a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- MOBILE CARDS -->
-                <div class="mobile-list">
-                    <div class="entry-card">
-                        <table class="table table-striped table-dark">
-                            <thead>
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Nome</th>
-                                    <th>BI</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach($falecidos as $trim):?>
-                                    <tr>
-                                        <td><?= $trim['codigo'] ?></td>
-                                        <td><?= $trim['nome_completo'] ?></td>
-                                        <td><?= $trim['bi'] ?></td>
-                                        <td>
-                                            <a href="#" class="nav-link"><i class="bi bi-eye-fill "> </i></a>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <p style="font-size: 13px; color:azure"><?= $ocupadas ?>/<?= $total ?> Gavetas</p>
+                                <p style="font-size: 14px; "><?= $percentagem; ?>%</p>
+                            </div>
 
-                                            <a href="../index.php?id=<?= $trim['id_falecido'] ?>" class="nav-link"><i class="bi bi-trash3-fill text-danger "> </i></a>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>                       
+                            <div style="width: 100%;">
+                                <!-- Barra de Progresso Visual -->
+                                <div class="progress " style="height: 10px;">
+                                    <div class="progress-bar <?= $percentagem >= 90 ? 'bg-danger' : 'bg-info'; ?>" 
+                                        role="progressbar" 
+                                        style="width: <?= $percentagem; ?>%;" 
+                                        aria-valuenow="<?= $percentagem; ?>" 
+                                        aria-valuemin="0" 
+                                        aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <a href="gavetas.php?camara=<?= urlencode($camara['codigo']); ?>" class="btn btn-outline-secondary btn-sm mt-2 mb-2"> Ver Gavetas</a>
+                                <a href="edit_camara.php?camara=<?= urlencode($camara['codigo']); ?>" class="btn btn-outline-primary btn-sm mt-2  mb-2"> Atualizar</a>
+                            </div>
+                        </div>
                     </div>
+                <?php endforeach; ?>
                 </div>
             </div>
         </main>

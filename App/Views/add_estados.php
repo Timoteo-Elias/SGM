@@ -1,5 +1,8 @@
-<?php  
-  include_once(__DIR__ . '/Auth.php');
+<?php 
+    include_once(__DIR__ . '/Auth.php');
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -181,88 +184,94 @@
     </style>
 </head>
 <body>
+    
+
     <div class="wrapper">
         <?php include_once('assets/sicebar.php') ?>
         <!-- CONTENT -->
         <main class="content">
             <?php include_once('assets/header.php') ?>
-           
             <!-- DESKTOP TABLE -->
+             <?php if (isset($_SESSION['erro'])): ?>
+                <div style="background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 12px 15px; border-radius: 4px; margin-bottom: 20px; font-family: sans-serif;">
+                    <strong>⚠️ Atenção:</strong> <?= htmlspecialchars($_SESSION['erro']); ?>
+                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <?php unset($_SESSION['erro']); // Apaga a mensagem após exibir para não repetir no F5 ?>
+            <?php endif; ?>
             <div class="container mt-5">
                 <div class="card shadow-sm">
                     <div class="card-header bg-dark text-white">
-                        <h4 class="mb-0">Cadastrar Novo Ingresso (Morgue)</h4>
+                        <h4 class="mb-0">Cadastrar Novo Estado</h4>
                     </div>
                     <div class="card-body">
-                        <form action="../index.php" method="POST">
+                        <form action="../estados.php" method="POST" enctype="multipart/form-data">
                             
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <label class="form-label fw-bold">Código do Processo *</label>
-                                    <input type="text" name="codigo" class="form-control" placeholder="Ex: EXP-2026-001" required>
+                                    <label class="form-label fw-bold">Nome de Estado*</label>
+                                    <input type="text" name="nome" class="form-control" placeholder="Ex: EXP-2026-001" required>
                                 </div>
                                 <div class="col-md-5">
-                                    <label class="form-label fw-bold">Nome Completo *</label>
-                                    <input type="text" name="nome" class="form-control" placeholder="Nome do falecido ou 'Desconhecido'" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label fw-bold">Sexo *</label>
-                                    <select name="sexo" class="form-select" required>
-                                        <option value="">Selecione...</option>
-                                        <option value="M">Masculino</option>
-                                        <option value="F">Feminino</option>
+                                    <label class="form-label fw-bold">Categoria*</label>
+                                    <select name="tipo" class="form-select" required>
+                                        <option value="">Selecione a Categoria</option>
+                                        <option value="gaveta">Gaveta</option>
+                                        <option value="camara">Camara</option>
+                                        <option value="entrada">Entrada</option>
+                                        <option value="saida">Saida</option>
+
                                     </select>
                                 </div>
-                            </div>
-
-                            <div class="row mb-3">
                                 <div class="col-md-3">
-                                    <label class="form-label">Data de Nascimento (Opcional)</label>
-                                    <input type="date" name="nascimento" class="form-control">
+                                    <label class="form-label fw-bold">Descrição *</label>
+                                    <input type="text" name="descricao" class="form-control" placeholder="Descrição do estado" required>
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Nº do BI (Opcional)</label>
-                                    <input type="text" name="bi" class="form-control" placeholder="Nº do Bilhete de Identidade">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Estado Civil (Opcional)</label>
-                                    <select name="estado_civil" class="form-select">
-                                        <option value="">Desconhecido</option>
-                                        <option value="Solteiro(a)">Solteiro(a)</option>
-                                        <option value="Casado(a)">Casado(a)</option>
-                                        <option value="Viúvo(a)">Viúvo(a)</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <label class="form-label">Nacionalidade (Opcional)</label>
-                                    <input type="text" name="nacionalidade" class="form-control" placeholder="Nacionalidade">
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-3">
-                                    <label class="form-label">Nome do Pai (Opcional)</label>
-                                    <input type="text" name="pai" class="form-control">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Nome da Mãe (Opcional)</label>
-                                    <input type="text" name="mae" class="form-control">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Endereço (Opcional)</label>
-                                    <input type="text" name="endereco" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Observações Médicas / Circunstâncias de Entrada *</label>
-                                <textarea name="obs" class="form-control" rows="3" placeholder="Detalhes sobre o estado do corpo, relatórios médicos, etc." required></textarea>
                             </div>
 
                             <div class="d-flex justify-content-end gap-2">
-                                <a href="falecidos.php" class="btn btn-secondary">Cancelar</a>
-                                <button type="submit" name="add-falecido" class="btn btn-success">Gravar Registo</button>
+                                <a href="estados.php" class="btn btn-secondary">Cancelar</a>
+                                <button type="submit" name="add-estado" class="btn btn-success">Gravar Estado</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MOBILE NAV -->
+    <?php include_once('assets/mobile.php') ?>
+    
+    <script>
+        function toggleSidebar() {
+            document.getElementById("menu").classList.toggle("compact");
+        }
+    </script>
+</body>
+</html>
+                                        <option value="">Selecione...</option>
+                                        <option value="Admin">Admin</option>
+                                        <option value="Operador">Operador</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">  
+                                <div class="col-md-3">
+                                    <label class="form-label">Senha *</label>
+                                    <input type="password" name="senha" class="form-control" placeholder="Senha do usuario" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Carregar foto de perfil</label>
+                                    <input type="file" name="foto_perfil" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="usuario.php" class="btn btn-secondary">Cancelar</a>
+                                <button type="submit" name="add-user" class="btn btn-success">Gravar Usuário</button>
                             </div>
                         </form>
                     </div>

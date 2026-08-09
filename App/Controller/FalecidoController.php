@@ -16,20 +16,16 @@ use Model\Falecido;
         public function index(){
             // 1. Procuramos os dados no banco e guardamos na variável $falecidos
             $falecidos = $this->falecidoDao->read();
-
             // 2. Caminho seguro para a View voltando uma pasta atrás (__DIR__ . '/../')
             require_once __DIR__ . '/../Views/falecidos.php';
-
             // 3. O teu return no final do método
             return $falecidos;
         }
         public function totalFalecido(){
             // 1. Procuramos os dados no banco e guardamos na variável $falecidos
             $total_falecidos = $this->falecidoDao->readTotal();
-
             // 2. Caminho seguro para a View voltando uma pasta atrás (__DIR__ . '/../')
             require_once __DIR__ . '/../Views/index.php';
-
             // 3. O teu return no final do método
             return $total_falecidos;
         }

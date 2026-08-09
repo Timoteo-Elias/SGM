@@ -1,4 +1,5 @@
 <?php
+    include_once(__DIR__ . '/Auth.php');
     require_once __DIR__ . '/../Controller/FalecidoController.php';
     require_once __DIR__ . '/../Model/Dao/falecidoDao.php';
     require_once __DIR__ . '/../Model/falecido.php';

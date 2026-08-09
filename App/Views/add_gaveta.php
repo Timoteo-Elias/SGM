@@ -1,5 +1,16 @@
-<?php  
-  include_once(__DIR__ . '/Auth.php');
+<?php 
+    include_once(__DIR__ . '/Auth.php');
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    require_once __DIR__ . '/../config/conexao.php';
+    require_once __DIR__ . '/../Model/Dao/GavetaDao.php';
+
+    $gavetaDao = new GavetaDao();
+    $proximoCodigo = $gavetaDao->getProximoCodigo();
+    $estados = $gavetaDao->getEstado(); // Carrega os estados da BD
+    $camaras = $gavetaDao->getCamaras(); // Carrega as câmaras da BD
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -181,88 +192,68 @@
     </style>
 </head>
 <body>
+    
+
     <div class="wrapper">
         <?php include_once('assets/sicebar.php') ?>
         <!-- CONTENT -->
         <main class="content">
             <?php include_once('assets/header.php') ?>
-           
             <!-- DESKTOP TABLE -->
+             <?php if (isset($_SESSION['erro'])): ?>
+                <div style="background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 12px 15px; border-radius: 4px; margin-bottom: 20px; font-family: sans-serif;">
+                    <strong>⚠️ Atenção:</strong> <?= htmlspecialchars($_SESSION['erro']); ?>
+                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <?php unset($_SESSION['erro']); // Apaga a mensagem após exibir para não repetir no F5 ?>
+            <?php endif; ?>
             <div class="container mt-5">
                 <div class="card shadow-sm">
                     <div class="card-header bg-dark text-white">
-                        <h4 class="mb-0">Cadastrar Novo Ingresso (Morgue)</h4>
+                        <h4 class="mb-0">Cadastrar Nova Gaveta </h4>
                     </div>
                     <div class="card-body">
-                        <form action="../index.php" method="POST">
+                        <form action="../gaveta.php" method="POST" enctype="multipart/form-data">
                             
                             <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Código do Processo *</label>
-                                    <input type="text" name="codigo" class="form-control" placeholder="Ex: EXP-2026-001" required>
-                                </div>
-                                <div class="col-md-5">
-                                    <label class="form-label fw-bold">Nome Completo *</label>
-                                    <input type="text" name="nome" class="form-control" placeholder="Nome do falecido ou 'Desconhecido'" required>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Código da gaveta*</label>
+                                    <input type="text" name="codigo" class="form-control" placeholder="Ex: GVT-0001" value="<?= htmlspecialchars($proximoCodigo); ?>" readonly>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label fw-bold">Sexo *</label>
-                                    <select name="sexo" class="form-select" required>
-                                        <option value="">Selecione...</option>
-                                        <option value="M">Masculino</option>
-                                        <option value="F">Feminino</option>
+                                    <label class="form-label fw-bold">Capacidade *</label>
+                                    <input type="number" name="capacidade" class="form-control" placeholder="Capacidade da gaveta" required min="1" oninput=" if(this.value < 0  )this.value = 1;">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Estado *</label>
+                                    <select name="estado" class="form-select" required>
+                                        <option value="">Selecione um estado</option>
+                                        <?php foreach ($estados as $estado): ?>
+                                            <option value="<?= $estado['id_estado']; ?>">
+                                                <?= htmlspecialchars($estado['nome']); ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
-                            </div>
-
-                            <div class="row mb-3">
                                 <div class="col-md-3">
-                                    <label class="form-label">Data de Nascimento (Opcional)</label>
-                                    <input type="date" name="nascimento" class="form-control">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Nº do BI (Opcional)</label>
-                                    <input type="text" name="bi" class="form-control" placeholder="Nº do Bilhete de Identidade">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Estado Civil (Opcional)</label>
-                                    <select name="estado_civil" class="form-select">
-                                        <option value="">Desconhecido</option>
-                                        <option value="Solteiro(a)">Solteiro(a)</option>
-                                        <option value="Casado(a)">Casado(a)</option>
-                                        <option value="Viúvo(a)">Viúvo(a)</option>
+                                    <label class="form-label fw-bold">Câmara *</label>
+                                    <select name="camara" class="form-select" required>
+                                        <option value="">Selecione uma câmara</option>
+                                        <?php foreach ($camaras as $camara): ?>
+                                            <option value="<?= $camara['id_camara']; ?>">
+                                                <?= htmlspecialchars($camara['codigo']); ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
-
-                                <div class="col-md-3">
-                                    <label class="form-label">Nacionalidade (Opcional)</label>
-                                    <input type="text" name="nacionalidade" class="form-control" placeholder="Nacionalidade">
+                                <div class="col-md-12 mt-3">
+                                    <label class="form-label fw-bold">Descrição</label>
+                                    <textarea name="descricao" class="form-control" placeholder="Descrição da gaveta"></textarea>
                                 </div>
                             </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-3">
-                                    <label class="form-label">Nome do Pai (Opcional)</label>
-                                    <input type="text" name="pai" class="form-control">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Nome da Mãe (Opcional)</label>
-                                    <input type="text" name="mae" class="form-control">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Endereço (Opcional)</label>
-                                    <input type="text" name="endereco" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Observações Médicas / Circunstâncias de Entrada *</label>
-                                <textarea name="obs" class="form-control" rows="3" placeholder="Detalhes sobre o estado do corpo, relatórios médicos, etc." required></textarea>
-                            </div>
-
                             <div class="d-flex justify-content-end gap-2">
-                                <a href="falecidos.php" class="btn btn-secondary">Cancelar</a>
-                                <button type="submit" name="add-falecido" class="btn btn-success">Gravar Registo</button>
+                                <a href="gavetas.php" class="btn btn-secondary">Cancelar</a>
+                                <button type="submit" name="add-user" class="btn btn-success">Gravar gaveta</button>
                             </div>
                         </form>
                     </div>
