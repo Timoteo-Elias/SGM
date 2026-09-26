@@ -19,22 +19,36 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="<?= $pagina == 'conservado.php' ? 'active' : '' ?>">
-                <a href="conservado.php">
+            <li class="<?= $pagina == 'conservados.php' ? 'active' : '' ?>">
+                <a href="conservados.php">
                     <i class="bi bi-snow"></i>
                     <span>Conservação</span>
                 </a>
             </li>
-            <li class="<?= $pagina == 'relatorio.php' ? 'active' : '' ?>">
-                <a href="relatorio.php">
-                    <i class="bi bi-file-earmark-bar-graph"></i>
-                    <span>Relatórios</span>
-                </a>
-            </li>
+           
             <li class="<?= $pagina == 'gavetas.php' ? 'active' : '' ?>">
                 <a href="gavetas.php">
                     <i class="bi bi-inboxes-fill"></i>
                     <span>Gavetas</span>
+                </a>
+            </li>
+            <li class="<?= $pagina == 'camaras.php' ? 'active' : '' ?>">
+                <a href="camaras.php">
+                    <i class="bi bi-square-fill"></i>
+                    <span>Camaras</span>
+                </a>
+            </li>
+            <li class="<?= $pagina == 'estados.php' ? 'active' : '' ?>">
+                <a href="estados.php">
+                    <i class="bi bi-bullseye"></i>
+                    <span>Estados</span>
+                </a>
+            </li>
+
+            <li class="<?= $pagina == 'relatorio.php' ? 'active' : '' ?>">
+                <a href="relatorio.php">
+                    <i class="bi bi-file-earmark-bar-graph"></i>
+                    <span>Relatórios</span>
                 </a>
             </li>
             <li class="<?= $pagina == 'usuario.php' ? 'active' : '' ?>">
@@ -49,18 +63,6 @@
                     <span>Configurações</span>
                 </a>
             </li>
-            <li class="<?= $pagina == 'estados.php' ? 'active' : '' ?>">
-                <a href="estados.php">
-                    <i class="bi bi-gear"></i>
-                    <span>Estados</span>
-                </a>
-            </li>
-            <li class="<?= $pagina == 'camaras.php' ? 'active' : '' ?>">
-                <a href="camaras.php">
-                    <i class="bi bi-square-fill"></i>
-                    <span>Camaras</span>
-                </a>
-            </li>
         </ul>
     </aside>
 
@@ -71,9 +73,6 @@
 ?>
     <aside class="sidebar">
         <div class="logo-area">
-            <div class="logo-icon">
-                <i class="bi bi-cpu"></i>
-            </div>
             <h5>HOSPITAL GERAL DE CACUACO</h5>
             <small>Sistema de Gestão</small>
         </div>
@@ -97,14 +96,20 @@
                     <span>Entradas</span>
                 </a>
             </li>
-            <li class="<?= $pagina == 'entregas.php' ? 'active' : '' ?>">
-                <a href="entregas.php">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span>Entregas</span>
+            <li class="<?= $pagina == 'depositantes.php' ? 'active' : '' ?>">
+                <a href="depositantes.php">
+                    <i class="bi bi-person-fill"></i>
+                    <span>Depositantes</span>
                 </a>
             </li>
-             <li class="<?= $pagina == 'conservado.php' ? 'active' : '' ?>">
-                <a href="conservado.php">
+            <li class="<?= $pagina == 'saidas.php' ? 'active' : '' ?>">
+                <a href="saidas.php">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Saidas</span>
+                </a>
+            </li>
+             <li class="<?= $pagina == 'conservados.php' ? 'active' : '' ?>">
+                <a href="conservados.php">
                     <i class="bi bi-snow"></i>
                     <span>Conservação</span>
                 </a>

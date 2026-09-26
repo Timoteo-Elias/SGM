@@ -83,6 +83,19 @@
             }
         }
 
+        public function Delete($id){
+            $idSanitizado = (int) $id;
+
+            if($idSanitizado <= 0){
+                $_SESSION['erro'] = "ID invalido";
+            }
+            $this->usuarioDao->delete($id);
+        }
+
+        public function getForId($id){
+            return $this->usuarioDao->getById($id);
+        }
+
     }
 
 

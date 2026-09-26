@@ -210,7 +210,22 @@
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold">Nome de Estado*</label>
-                                    <input type="text" name="nome" class="form-control" placeholder="Ex: EXP-2026-001" required>
+                                    <select name="nome" class="form-select" required>
+                                        <option value="">Selecione nome</option>
+                                        <option value="pendente">Entrada Pendente</option>
+                                        <option value="conservado">Em Conservação</option>
+                                        <option value="liberado">liberação</option>
+                                        <option value="revindicacao">revindicação</option>
+                                        <option value="operacional">Camara Operacional</option>
+                                        <option value="manutenção">Camara em manutenção</option>
+                                        <option value="avariado">Camara Avariada</option>
+                                        <option value="livre">Gaveta Livre</option>
+                                        <option value="ocupada">Gaveta Ocupada</option>
+                                        <option value="reservada">Gaveta Reservada</option>
+                                        <option value="higiene">Gaveta em Higienização</option>
+                                        <option value="inoperavel">Gaveta Inoperável</option>
+
+                                    </select>
                                 </div>
                                 <div class="col-md-5">
                                     <label class="form-label fw-bold">Categoria*</label>
@@ -232,46 +247,6 @@
                             <div class="d-flex justify-content-end gap-2">
                                 <a href="estados.php" class="btn btn-secondary">Cancelar</a>
                                 <button type="submit" name="add-estado" class="btn btn-success">Gravar Estado</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- MOBILE NAV -->
-    <?php include_once('assets/mobile.php') ?>
-    
-    <script>
-        function toggleSidebar() {
-            document.getElementById("menu").classList.toggle("compact");
-        }
-    </script>
-</body>
-</html>
-                                        <option value="">Selecione...</option>
-                                        <option value="Admin">Admin</option>
-                                        <option value="Operador">Operador</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">  
-                                <div class="col-md-3">
-                                    <label class="form-label">Senha *</label>
-                                    <input type="password" name="senha" class="form-control" placeholder="Senha do usuario" required>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label">Carregar foto de perfil</label>
-                                    <input type="file" name="foto_perfil" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-end gap-2">
-                                <a href="usuario.php" class="btn btn-secondary">Cancelar</a>
-                                <button type="submit" name="add-user" class="btn btn-success">Gravar Usuário</button>
                             </div>
                         </form>
                     </div>

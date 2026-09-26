@@ -49,4 +49,18 @@
             $usuario = $res->rowCount()>0 ? $res->fetchAll(PDO::FETCH_ASSOC) : [];
             return $usuario;
         }
+
+        public function delete($id){
+            $sql = "DELETE FROM usuario WHERE id_user = ?";
+            $res = Connect::getConn()->prepare($sql);
+            $res->bindParam(1, $id);
+            $res->execute();
+        }
+
+        public function getById($id){
+            $sql = "SELECT * FROM usuario WHERE id_user = $id";
+            $res = Connect::getConn()->query($sql);
+            $usuario = $res->rowCount()>0 ? $res->fetch() : [];
+            return $usuario;
+        }
     }

@@ -41,4 +41,34 @@
                 return false;
             }
         }
+
+        public function delete($id){
+            $sql = "DELETE FROM estado WHERE id_estado = ?";
+            $res = Connect::getConn()->prepare($sql);
+            $res->bindParam(1, $id);
+            $res->execute();
+        }
+
+        public function FindId($id){
+            $sql = "SELECT * FROM estado WHERE id_estado = $id";
+            $res = Connect::getConn()->query($sql);
+            $estado = $res->rowCount()>0 ? $res->fetch() : [];
+            return $estado;
+        }
+
+        public function update(Estados $est){
+            try {
+                $sql = "UPDATE estado SET nome = ?, tipo = ?, descricao = ? WHERE id_estado = ?";
+                $res = Connect::getConn()->prepare($sql);
+                return $res->execute([
+                    $est->getNome(),
+                    $est->getTipo(),
+                    $est->getDescricao(),
+                    $est->getId()
+                ]);
+            } catch (\PDOException $e) {
+                 echo "Erro MySQL: " . $e->getMessage(); exit();
+                return false;
+            }
+        }
     }

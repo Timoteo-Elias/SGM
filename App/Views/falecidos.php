@@ -204,12 +204,22 @@
            
             <!-- DESKTOP TABLE -->
             <div class="table-section mt-4">
-                <div class="d-flex justify-content-between mb-3">
-                    <h5>Lista de Falecidos</h5>
-                    <div>
-                        <a href="" class="btn btn-outline-danger me-3"> <i class="bi bi-fille-pdf"></i> imprimir</a>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-2">
+                        <h5>Lista de Falecidos</h5>
+                    </div>
+                    <div class="col-md-7">
+                        <form class=" ">
+                            <div class="d-flex">
+                                <input type="search" name="pesquisa" class="form-control " placeholder="Buscar pelo nome ou Código">
+                                <button type="submit" class="btn btn-primary"> <i class="bi bi-search"></i></button>
+                            </div>
+                        </form> 
+                    </div>
+                    <div class="col-md-3">
+                        <a href="" class="btn btn-danger me-2"> <i class="bi bi-printer-fill"></i> imprimir</a>
                     
-                        <a href="add_falecido.php" class="btn btn-outline-primary"> <i class="bi bi-plus"></i> Registrar</a>
+                        <a href="add_falecido.php" class="btn btn-success"><i class="bi bi-plus"></i> Registrar</a>
                     </div>
                 </div>
                 <?php if (isset($_SESSION['sucesso'])): ?>
@@ -253,10 +263,7 @@
                                 <th>Sexo</th>
                                 <th>BI</th>
                                 <th>Idade</th>
-                                <th>Nacionalidade</th>
-                                <th>Nome do Pai</th>
-                                <th>Nome da Mãe</th>
-                                <th></th>
+                                <th>Ação</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -265,16 +272,13 @@
                                     <td><?= $trim['codigo'] ?></td>
                                     <td><?= $trim['nome_completo'] ?></td>
                                     <td><?= $trim['sexo'] ?></td>
-                                    <td><?= $trim['bi'] ?></td>
+                                    <td><?= !empty($trim['bi']) ? $trim['bi'] : 'BI Desconhecido' ?></td>
                                     <td><?= !empty($trim['idade']) ? $trim['idade'] . ' Anos' : 'Idade Desconhecida' ?></td>
-                                    <td><?= $trim['nacionalidade'] ?></td>
-                                    <td><?= $trim['pai'] ?></td>
-                                    <td><?= $trim['mae'] ?></td>
-                                    <td class="d-flex">
-                                        <a href="#" class="nav-link me-2"><i class="bi bi-eye-fill text-primary"> </i></a>
-                                        <a href="edit_falecido.php?id=<?= $trim['id_falecido'] ?>" class="nav-link me-2"><i class="bi bi-pen-fill text-success"></i></a>
+                                    <td >
+                                        <a href="ver_falecido.php?id=<?= $trim['id_falecido'] ?>" class="btn btn-sm btn-primary"><i class="bi bi-eye-fill"> </i></a>
+                                        <a href="edit_falecido.php?id=<?= $trim['id_falecido'] ?>" class="btn btn-sm btn-success"><i class="bi bi-pen-fill"></i></a>
 
-                                        <a href="../index.php?id=<?= $trim['id_falecido'] ?>" class="nav-link"><i class="bi bi-trash3-fill text-danger "></i></a>
+                                        <a href="../index.php?id=<?= $trim['id_falecido'] ?>" class="btn btn-sm btn-danger"><i class="bi bi-trash3-fill"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

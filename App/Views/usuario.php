@@ -203,12 +203,21 @@
         
             <!-- DESKTOP TABLE -->
             <div class="table-section mt-4">
-                <div class="d-flex justify-content-between mb-3">
-                    <h5></h5>
-                    <div>
+                <div class="row g-4 mb-3">
+                    <div class="col-md-2">
+                        <h5>Lista de Usuários</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <form class=" ">
+                            <div class="d-flex">
+                                <input type="search" name="pesquisa" class="form-control " placeholder="Buscar pelo nome ou email">
+                                <button type="submit" class="btn btn-primary"> <i class="bi bi-search"></i></button>
+                            </div>
+                        </form> 
+                    </div>
+                    <div class="col-md-4">
                         <a href="" class="btn btn-outline-danger me-3"> <i class="bi bi-fille-pdf"></i> imprimir</a>
-                    
-                        <a href="add_user.php" class="btn btn-outline-primary"> <i class="bi bi-plus"></i> Registrar</a>
+                        <a href="add_user.php" class="btn btn-outline-primary"> <i class="bi bi-plus"></i> Novo Usuário</a>
                     </div>
                 </div>
                 <?php if (isset($_SESSION['sucesso'])): ?>
@@ -236,7 +245,7 @@
                 
 
                 <?php if (isset($_SESSION['delete'])): ?>
-                    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                    <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
                         <strong>✓ Sucesso!</strong> <?= $_SESSION['delete']; ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
@@ -275,11 +284,10 @@
                                     <td><?= $trim['email'] ?></td>
                                     <td><?= $trim['perfil'] ?></td>
                                     <td><img src="../../uploads/usuarios/<?= $trim['imagem'] ?>" alt="" width="25"></td>
-                                    <td class="d-flex">
-                                        <a href="#" class="nav-link me-2"><i class="bi bi-eye-fill text-primary"> </i></a>
-                                        <a href="edit_usuario.php?id=<?= $trim['id_user'] ?>" class="nav-link me-2"><i class="bi bi-pen-fill text-success"></i></a>
-
-                                        <a href="../usuarios.php?id=<?= $trim['id_user'] ?>" class="nav-link"><i class="bi bi-trash3-fill text-danger "></i></a>
+                                    <td>
+                                        <a href="#" class="btn btn-sm btn-primary"><i class="bi bi-eye-fill"> </i></a>
+                                        <a href="edit_usuario.php?id=<?= $trim['id_user'] ?>" class="btn btn-sm btn-success"><i class="bi bi-pen-fill"></i></a>
+                                        <a href="../usuarios.php?id=<?= $trim['id_user'] ?>" class="btn btn-sm btn-danger"><i class="bi bi-trash3-fill"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

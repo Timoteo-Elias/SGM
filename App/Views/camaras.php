@@ -192,9 +192,11 @@
             <?php include_once('assets/painel.php') ?>
 
              <div class="table-section mt-4">
-                <div class="d-flex justify-content-between">
-                    <h5>Gestão de Câmaras</h5>
-                    <div>                    
+                <div class="row g-4 mb-3">
+                    <div class="col-md-10">
+                        <h5>Gestão de Câmaras</h5>
+                    </div>
+                    <div class="col-md-2">
                         <a href="add_camara.php" class="btn btn-outline-primary"> <i class="bi bi-plus"></i> Nova Câmara</a>
                     </div>
                 </div>
@@ -301,8 +303,8 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between align-items-center mt-2">
-                                <a href="gavetas.php?camara=<?= urlencode($camara['codigo']); ?>" class="btn btn-outline-secondary btn-sm mt-2 mb-2"> Ver Gavetas</a>
-                                <a href="edit_camara.php?camara=<?= urlencode($camara['codigo']); ?>" class="btn btn-outline-primary btn-sm mt-2  mb-2"> Atualizar</a>
+                                <a href="gavetas.php" class="btn btn-outline-secondary btn-sm mt-2 mb-2"> Ver Gavetas</a>
+                                <a href="edit_camara.php?id=<?= urlencode($camara['id_camara']); ?>" class="btn btn-outline-primary btn-sm mt-2  mb-2"> Atualizar</a>
                             </div>
                         </div>
                     </div>

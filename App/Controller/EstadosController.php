@@ -38,4 +38,30 @@
                 return false;
             }
         }
+
+        
+
+        public function delete($id){
+            $idSanitizado = (int) $id;
+
+            if ($idSanitizado <= 0) {
+                $_SESSION['erro'] = "ID inválido fornecido!";
+                return false;
+            }
+            $this->estadosDao->delete($id);
+        }
+
+        public function Edit($id){
+            return $this->estadosDao->FindId($id);
+        }
+
+        public function Update($nome,$tipo,$descricao,$id){
+            $this->estados->setNome($nome);
+            $this->estados->setTipo($tipo);
+            $this->estados->setDescricao($descricao);
+            $this->estados->setId($id);
+
+            $this->estadosDao->update($this->estados);
+        }
+        
     }

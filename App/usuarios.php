@@ -3,10 +3,10 @@
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
-    require_once __DIR__ . '/Controller/UsuarioController.php';
-    require_once __DIR__ . '/Model/Dao/usuarioDao.php';
-    require_once __DIR__ . '/Model/usuario.php';
     require_once __DIR__ . '/config/conexao.php';
+    require_once __DIR__ . '/Model/usuario.php';
+    require_once __DIR__ . '/Model/Dao/usuarioDao.php';
+    require_once __DIR__ . '/Controller/UsuarioController.php';
 
     $usuariocontroller = new UsuarioController;
 
@@ -21,18 +21,25 @@
         );
 
         if ($sucesso) {
-        $_SESSION['sucesso'] = "Usuário cadastrado com sucesso!";
-    } else {
-        // CORREÇÃO AQUI: Se o Controller já guardou uma mensagem de erro específica
-        // (como formato inválido ou e-mail duplicado), mantemos essa mensagem.
-        // Só usamos a mensagem genérica se a $_SESSION['erro'] estiver VAZIA.
-        if (empty($_SESSION['erro'])) {
-            $_SESSION['erro'] = "Não foi possível salvar o usuário. Verifique os dados digitados.";
+            $_SESSION['sucesso'] = "Usuário cadastrado com sucesso!";
+        } else {
+            // CORREÇÃO AQUI: Se o Controller já guardou uma mensagem de erro específica
+            // (como formato inválido ou e-mail duplicado), mantemos essa mensagem.
+            // Só usamos a mensagem genérica se a $_SESSION['erro'] estiver VAZIA.
+            if (empty($_SESSION['erro'])) {
+                $_SESSION['erro'] = "Não foi possível salvar o usuário. Verifique os dados digitados.";
+            }
         }
-    }
-
         header("Location: views/usuario.php");
         exit();
+    }
+
+    if(isset($_GET['id']) && $_GET['id'] !== ''){
+        $usuariocontroller->Delete($_GET['id']);
+
+       $_SESSION['delete'] = "O registo do Usuario foi Eliminado com sucesso.";
+        header("location:views/usuario.php");
+        exit;
     }
   
 
