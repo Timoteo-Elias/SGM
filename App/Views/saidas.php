@@ -212,7 +212,7 @@
                         </form> 
                     </div>
                     <div class="col-md-3">
-                        <a href="" class="btn btn-danger me-2"> <i class="bi bi-printer-fill"></i> imprimir</a>
+                        <a target="_blank" href="../pdf/lista_saida.php" class="btn btn-danger me-2"> <i class="bi bi-printer-fill"></i> imprimir</a>
                         <a href="nova_saida.php" class="btn btn-success"><i class="bi bi-plus"></i> Registrar</a>
                     </div>
                 </div>

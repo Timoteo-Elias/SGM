@@ -16,6 +16,11 @@
             require_once __DIR__ . '/../Views/entradas.php';
             return $entrada;
         }
+
+         public function lista(){
+            return $this->entradaDao->read();
+            
+        }
         public function delete($id){
             $idSanitizado = (int) $id;
 

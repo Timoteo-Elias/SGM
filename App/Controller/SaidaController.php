@@ -15,6 +15,9 @@
             require_once __DIR__ . '/../Views/saidas.php';
             return $saida;
         }
+        public function lista(){
+            return $this->saidaDao->read();
+        }
         public function total_h(){
             $total_e = $this->saidaDao->TotalSaidaHoje();
             require_once __DIR__ . '/../Views/index.php';

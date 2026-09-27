@@ -100,5 +100,12 @@
 
             $res->execute();
         }
+
+        public function Confi(){
+            $sql = "SELECT * FROM config";
+            $res = Connect::getConn()->query($sql);
+            $res->execute();
+            return $res->fetch(PDO::FETCH_ASSOC);
+        }
         
     }
