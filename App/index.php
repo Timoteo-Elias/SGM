@@ -3,10 +3,10 @@
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
-    require_once __DIR__ . '/Controller/FalecidoController.php';
-    require_once __DIR__ . '/Model/Dao/falecidoDao.php';
-    require_once __DIR__ . '/Model/falecido.php';
     require_once __DIR__ . '/config/conexao.php';
+    require_once __DIR__ . '/Model/falecido.php';
+    require_once __DIR__ . '/Model/Dao/falecidoDao.php';
+    require_once __DIR__ . '/Controller/FalecidoController.php';
 
     $falecidocontroller = new FalecidoController;
 
@@ -24,7 +24,7 @@
         exit;
     }
 
-    if(isset($_GET['id']) && !empty($_GET['id'])){
+    if(isset($_GET['id']) && $_GET['id'] !== ''){
         $falecidocontroller->delete($_GET['id']);
 
         $_SESSION['delete'] = "O registo do falecido foi Eliminado com sucesso.";

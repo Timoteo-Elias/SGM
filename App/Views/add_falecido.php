@@ -1,5 +1,14 @@
 <?php  
   include_once(__DIR__ . '/Auth.php');
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    require_once __DIR__ . '/../config/conexao.php';
+    require_once __DIR__ . '/../Model/Dao/falecidoDao.php';
+
+    $falecidoDao = new FalecidoDao();
+    $proximoCodigo = $falecidoDao->proximoCodigo();
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -199,7 +208,7 @@
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold">Código do Processo *</label>
-                                    <input type="text" name="codigo" class="form-control" placeholder="Ex: EXP-2026-001" required>
+                                    <input type="text" name="codigo" class="form-control" placeholder="Ex: FLC-2026-001" value="<?= htmlspecialchars($proximoCodigo); ?>" readonly>
                                 </div>
                                 <div class="col-md-5">
                                     <label class="form-label fw-bold">Nome Completo *</label>
@@ -217,12 +226,12 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-3">
-                                    <label class="form-label">Data de Nascimento (Opcional)</label>
+                                    <label class="form-label">Nascimento (Opcional)</label>
                                     <input type="date" name="nascimento" class="form-control">
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Nº do BI (Opcional)</label>
-                                    <input type="text" name="bi" class="form-control" placeholder="Nº do Bilhete de Identidade">
+                                    <input style="text-transform: uppercase;" type="text" name="bi" class="form-control" placeholder="Nº do Bilhete de Identidade" maxlength="14" pattern="[0-9]{9}[A-Za-z]{2}[0-9]{3}">
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Estado Civil (Opcional)</label>
@@ -236,7 +245,11 @@
 
                                 <div class="col-md-3">
                                     <label class="form-label">Nacionalidade (Opcional)</label>
-                                    <input type="text" name="nacionalidade" class="form-control" placeholder="Nacionalidade">
+                                    <select name="nacionalidade" class="form-select" required>
+                                        <option value="">Selecione...</option>
+                                        <option value="Angolana">Angolana</option>
+                                        <option value="Estrangeira">Estrangeira</option>
+                                    </select>
                                 </div>
                             </div>
 

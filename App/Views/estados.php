@@ -193,38 +193,7 @@
         <main class="content">
             <?php include_once('assets/header.php') ?>
             <?php include_once('assets/painel.php') ?>
-
             
-            <!-- CARDS -->
-            <div class="row g-4">
-                <div class="col-xl-4 col-md-6">
-                    <div class="dashboard-card">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h2>5</h2>
-                            <i class="bi bi-bullseye"></i>
-                        </div>
-                        <p>Total de Estados Ativos</p>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-md-6">
-                    <div class="dashboard-card">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h2>5</h2>
-                            <i class="bi bi-inboxes-fill"></i>
-                        </div>
-                        <p>Gavetas Disponíveis</p>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-md-6">
-                    <div class="dashboard-card">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h2>5</h2>
-                            <i class="bi bi-square-fill"></i>
-                        </div>
-                        <p>Camaras Ocupadas</p>
-                    </div>
-                </div>
-            </div>
 
             <!-- DESKTOP TABLE -->
             <div class="table-section mt-4">
@@ -296,8 +265,8 @@
                                     <td><?= htmlspecialchars($estado['nome']) ?></td>
                                     <td><?= htmlspecialchars($estado['descricao']) ?></td>
                                     <td>
-                                        <a href="edit_estado.php?id=<?= $estado['id_estado'] ?>" class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i> Editar</a>
-                                        <a href="delete_estado.php?id=<?= $estado['id_estado'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este estado?');"> <i class="bi bi-trash"></i> Excluir</a>
+                                        <a href="edit_estado.php?id=<?= $estado['id_estado'] ?>" class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></a>
+                                        <a href="../estados.php?id=<?= $estado['id_estado'] ?>" class="btn btn-sm btn-danger"> <i class="bi bi-trash"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

@@ -14,12 +14,15 @@ use Model\Falecido;
         }
 
         public function index(){
-            // 1. Procuramos os dados no banco e guardamos na variável $falecidos
             $falecidos = $this->falecidoDao->read();
-            // 2. Caminho seguro para a View voltando uma pasta atrás (__DIR__ . '/../')
             require_once __DIR__ . '/../Views/falecidos.php';
-            // 3. O teu return no final do método
             return $falecidos;
+        }
+        public function lista(){
+            return $this->falecidoDao->read();
+        }
+        public function confi(){
+            return $this->falecidoDao->Confi();
         }
         public function totalFalecido(){
             // 1. Procuramos os dados no banco e guardamos na variável $falecidos
@@ -31,8 +34,27 @@ use Model\Falecido;
         }
         
         public function insert($codigo,$nome,$sexo,$obs){
-
+            $biTratado = !empty(trim($bi)) ? strtoupper(trim($bi)) : null;
+            if (empty($codigo)) {
+                $codigo = $this->falecidoDao->proximoCodigo();
+            }
             // 3. Injetar os dados na Model tratando os opcionais (Vazios viram NULL)
+            if ($biTratado !== null) {
+                $padraoBI = '/^[0-9]{9}[A-Z]{2}[0-9]{3}$/';
+                if (!preg_match($padraoBI, $biTratado)) {
+                    $_SESSION['erro'] = "Atenção: O número do BI/NIF não está no formato correto!";
+                    return false;
+                }
+
+                $biExiste = $this->falecidoDao->buscarPorBi($biTratado);
+                if ($biExiste) {
+                    $_SESSION['erro'] = "Atenção: Já existe um registo cadastrado com este número de BI/NIF!";
+                    return false;
+                }
+            }
+
+            $codigoAutomático = 'FLC-' . date('Y') . '-' . rand(1000, 9999);
+
             $this->falecido->setCodigo($codigo);
             $this->falecido->setNome($nome);
             $this->falecido->setSexo($sexo);
@@ -51,11 +73,21 @@ use Model\Falecido;
         }
 
         public function delete($id){
+            $idSanitizado = (int) $id;
+
+            if ($idSanitizado <= 0) {
+                $_SESSION['erro'] = "ID inválido fornecido!";
+                return false;
+            }
             $this->falecidoDao->delete($id);
         }
 
         public function getForId($id){
             return $this->falecidoDao->getById($id);
+        }
+
+        public function Ver($id){
+            return $this->falecidoDao->VerId($id);
         }
 
         public function Update($codigo,$nome,$sexo,$obs,$id){

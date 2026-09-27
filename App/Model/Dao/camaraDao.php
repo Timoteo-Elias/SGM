@@ -60,4 +60,41 @@
             $camara->execute();
             return $camara->fetchAll(PDO::FETCH_ASSOC);
         }
+        public function findById($camara) {
+            try {
+                $sql = "SELECT * FROM camara WHERE id_camara = ? ";
+                $stmt = Connect::getConn()->prepare($sql);
+                $stmt->bindValue(1, $camara);
+                $stmt->execute();
+                
+                return $stmt->fetch(PDO::FETCH_ASSOC); // Retorna os dados da câmara ou false se não encontrar
+            } catch (PDOException $e) {
+                return false;
+            }
+        }
+        public function getForId($id) {
+            try {
+                $sql = "SELECT c.id_camara, c.codigo, c.temperatura, c.capacidade, c.obs, e.nome as estado  FROM camara c
+                INNER JOIN estado e ON c.id_estado = e.id_estado WHERE id_camara = ? ";
+                $stmt = Connect::getConn()->prepare($sql);
+                $stmt->bindValue(1, $id);
+                $stmt->execute();
+                
+                return $stmt->fetch(PDO::FETCH_ASSOC); // Retorna os dados da câmara ou false se não encontrar
+            } catch (PDOException $e) {
+                return false;
+            }
+        }
+
+        public function update(Camara $camara){
+            $sql = "UPDATE camara SET capacidade = ?, temperatura = ?, id_estado = ?, obs = ? WHERE id_camara = ?";
+            $res = Connect::getConn()->prepare($sql);
+             return $res->execute([
+                    $camara->getCapacidade(),
+                    $camara->getTemperatura(),
+                    $camara->getEstado(),
+                    $camara->getObs(),
+                    $camara->getId()
+                ]);
+        }
     }

@@ -16,8 +16,13 @@
             require_once __DIR__ . '/../Views/camaras.php';
             return $camaras;
         }
+        public function total_l(){
+            $camaras = $this->camaraDao->read();
+            require_once __DIR__ . '/../Views/relatorio.php';
+            return $camaras;
+        }
 
-        public function insert($codigo, $capacidade , $temperatura, $estado, $obs){
+        public function insert($codigo,$capacidade,$temperatura,$estado,$obs){
 
             // Se o código vier vazio, gera o automático
             if (empty($codigo)) {
@@ -42,10 +47,22 @@
             $this->camara->setTemperatura((float)$temperatura);
             $this->camara->setEstado((int)$estado);
             $this->camara->setObs($obs);
-
-            // Chamar o método create do CamaraDao para salvar no banco de dados
             return $this->camaraDao->create($this->camara);
         }
 
+        public function getForId($id){
+            return $this->camaraDao->getForId($id);
+        }
+
+        public function update($capacidade,$temperatura,$estado,$obs,$id){
+
+            $this->camara->setCapacidade((int)$capacidade);
+            $this->camara->setTemperatura((float)$temperatura);
+            $this->camara->setEstado((int)$estado);
+            $this->camara->setObs($obs);
+            $this->camara->setId($id);
+
+            $this->camaraDao->update($this->camara);
+        }
         
     }

@@ -3,14 +3,30 @@
     require_once __DIR__ . '/../Controller/FalecidoController.php';
     require_once __DIR__ . '/../Model/Dao/falecidoDao.php';
     require_once __DIR__ . '/../Model/falecido.php';
+
+    require_once __DIR__ . '/../Controller/EntradaController.php';
+    require_once __DIR__ . '/../Model/Dao/entradaDao.php';
+    require_once __DIR__ . '/../Model/Entrada.php';
+
+    require_once __DIR__ . '/../Controller/SaidaController.php';
+    require_once __DIR__ . '/../Model/Dao/saidaDao.php';
+    require_once __DIR__ . '/../Model/Saida.php';
     use Model\Falecido;
-    // 2. INSTANCIAR AS CAMADAS (O "Motor" do MVC)
-    // (Ajusta a forma como geras a tua conexão PDO se usares uma classe própria)
+
+    $entradaDao = new EntradaDao(); 
+    $entradaController = new EntradaController($entradaDao);
+    $ultimas = $entradaController->ultimasentradas(); 
+
+    $saidaDao = new SaidaDao(); 
+    $saidaController = new SaidaController($saidaDao);
+    $saida_h = $saidaController->total_h(); 
+
     $falecidoDao = new FalecidoDao(); 
     $FalecidoController = new FalecidoController($falecidoDao);
-    // 3. CRIAR A VARIÁVEL QUE A TABELA PRECISA
-    // Chamamos o método do controller para recolher os dados do banco
+
     $total_falecido = $FalecidoController->totalFalecido(); 
+    $total_e = $entradaController->total_e(); 
+    $total_h = $entradaController->total_h(); 
     // Daqui para baixo, o teu HTML/Bootstrap continua exatamente igual...
 
     if (session_status() === PHP_SESSION_NONE) {
@@ -213,21 +229,21 @@
                 <div class="col-xl-3 col-md-6">
                     <div class="dashboard-card">
                         <i class="bi bi-box-arrow-in-right"></i>
-                        <h2>12</h2>
+                        <h2><?php echo $total_h['total_h'] ?></h2>
                         <p>Entradas Hoje</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-6">
                     <div class="dashboard-card">
                         <i class="bi bi-box-arrow-right"></i>
-                        <h2>07</h2>
+                        <h2><?php echo $saida_h['total_h'] ?></h2>
                         <p>Entregues Hoje</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-6">
                     <div class="dashboard-card">
                         <i class="bi bi-snow"></i>
-                        <h2>54</h2>
+                        <h2><?php echo $total_e['total_e'] ?></h2>
                         <p>Conservação</p>
                     </div>
                 </div>
@@ -237,9 +253,6 @@
             <div class="table-section mt-4">
                 <div class="d-flex justify-content-between mb-3">
                     <h5>Últimas Entradas</h5>
-                    <div>
-                        <a href="" class="btn btn-outline-light"> Ver Todas</a>
-                    </div>
                 </div>
                 <div class="table-responsive desktop-table">
                     <table class="table table-striped table-dark">
@@ -247,31 +260,21 @@
                             <tr>
                                 <th>Código</th>
                                 <th>Nome</th>
-                                <th>Origem</th>
+                                <th>Depositante</th>
                                 <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>F2026-1248</td>
-                                <td>João Manuel</td>
-                                <td>Hospital Geral</td>
-                                <td>
-                                    <span class="badge bg-success">
-                                        Conservação
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>F2026-1248</td>
-                                <td>João Manuel</td>
-                                <td>Hospital Geral</td>
-                                <td>
-                                    <span class="badge bg-success">
-                                        Conservação
-                                    </span>
-                                </td>
-                            </tr>
+                           <?php foreach($ultimas as $trim):?>
+                                <tr>
+                                    <td><?= $trim['codigo'] ?></td>
+                                    <td><?= $trim['falecido'] ?></td>
+                                    <td><?= $trim['depositante'] ?></td>
+                                    <td>
+                                        <span class="badge bg-success fs-6"><?= $trim['estado'] ?></span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
@@ -287,11 +290,15 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                 <?php foreach($ultimas as $trim):?>
                                 <tr>
-                                    <td>F2026-1248</td>
-                                    <td>João Manuel</td>
-                                    <td><span class="badge bg-success">Conservação</span></td>
+                                    <td><?= $trim['codigo'] ?></td>
+                                    <td><?= $trim['falecido'] ?></td>
+                                    <td>
+                                        <span class="badge bg-success fs-6"><?= $trim['estado'] ?></span>
+                                    </td>
                                 </tr>
+                            <?php endforeach; ?>
                             </tbody>
                         </table>                       
                     </div>

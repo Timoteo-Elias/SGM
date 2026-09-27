@@ -23,6 +23,31 @@
 
             return $result->execute();
         }
+        public function readByBi($bi){
+           try {
+                $sql = "SELECT * FROM falecidos WHERE bi = ? LIMIT 1";
+                $stmt = Connect::getConn()->prepare($sql);
+                $stmt->bindValue(1, $bi);
+                $stmt->execute();
+                
+                return $stmt->fetch(PDO::FETCH_ASSOC); // Retorna os dados do falecido ou false se não encontrar
+            } catch (PDOException $e) {
+                return false;
+            }
+        }
+        public function proximoCodigo() {
+            try {
+                $sql = "SELECT MAX(id_falecido) as ultimo_id FROM falecidos";
+                $stmt = Connect::getConn()->query($sql);
+                $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                $proximoId = ($resultado['ultimo_id'] ?? 0) + 1;
+
+                return 'FLC-' . date('Y') . '-' . str_pad($proximoId, 4, '0', STR_PAD_LEFT);
+            } catch (PDOException $e) {
+                return false;
+            }
+        }
         public function read(){
             $sql = "SELECT *, TIMESTAMPDIFF(YEAR, data_nascimento, NOW()) AS idade FROM falecidos";
             $res = Connect::getConn()->query($sql);
@@ -50,6 +75,12 @@
             $falecido = $res->rowCount()>0 ? $res->fetch() : [];
             return $falecido;
         }
+        public function VerId($id){
+            $sql = "SELECT * FROM falecidos WHERE id_falecido = $id";
+            $res = Connect::getConn()->query($sql);
+            $falecido = $res->rowCount()>0 ? $res->fetch() : [];
+            return $falecido;
+        }
 
         public function update(Falecido $f){
             $sql = "UPDATE falecidos SET codigo = ?, nome_completo = ?, sexo = ?, data_nascimento = ?, estado_civil = ?, nacionalidade = ?, bi = ?, pai = ?, mae = ?, endereco = ?, observacoes = ? WHERE id_falecido = ?";
@@ -68,6 +99,13 @@
             $res->bindValue(12, $f->getId());
 
             $res->execute();
+        }
+
+        public function Confi(){
+            $sql = "SELECT * FROM config";
+            $res = Connect::getConn()->query($sql);
+            $res->execute();
+            return $res->fetch(PDO::FETCH_ASSOC);
         }
         
     }

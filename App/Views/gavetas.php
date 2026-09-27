@@ -11,6 +11,8 @@
     // Chamamos o método do controller para recolher os dados do banco
     $gavetas = $GavetaController->index(); 
     $total_g = $GavetaController->totalGavetas(); 
+    $total_o = $GavetaController->gavetasOcupadas(); 
+    $total_D = $GavetaController->gavetasDisponivel(); 
     if (session_status() === PHP_SESSION_NONE) {
         session_start(); 
     }
@@ -212,14 +214,14 @@
                 <div class="col-xl-4 col-md-6">
                     <div class="dashboard-card">
                         <i class="bi bi-box-arrow-right"></i>
-                        <h2>07</h2>
+                        <h2><?php echo $total_D['total'] ?></h2>
                         <p>Gavetas Disponíveis</p>
                     </div>
                 </div>
                 <div class="col-xl-4 col-md-6">
                     <div class="dashboard-card">
                         <i class="bi bi-snow"></i>
-                        <h2>5</h2>
+                        <h2><?php echo $total_o['total'] ?></h2>
                         <p>Gavetas Ocupadas</p>
                     </div>
                 </div>
@@ -227,12 +229,21 @@
 
             <!-- DESKTOP TABLE -->
             <div class="table-section mt-4">
-                <div class="d-flex justify-content-between mb-3">
-                    <h5>Lista de Gavetas</h5>
-                    <div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-2">
+                        <h5>Lista de Gavetas</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <form method="POST" action="../gaveta.php" class=" ">
+                            <div class="d-flex">
+                                <input type="search" name="pesquisa" class="form-control " placeholder="Buscar pelo Código da gaveta">
+                                <button type="submit" class="btn btn-primary"> <i class="bi bi-search"></i></button>
+                            </div>
+                        </form> 
+                    </div>
+                    <div class="col-md-4">
                         <a href="" class="btn btn-outline-danger me-3"> <i class="bi bi-fille-pdf"></i> imprimir</a>
-                    
-                        <a href="add_gaveta.php" class="btn btn-outline-primary"> <i class="bi bi-plus"></i> Nova</a>
+                        <a href="add_gaveta.php" class="btn btn-outline-primary"> <i class="bi bi-plus"></i> Nova Gaveta</a>
                     </div>
                 </div>
                 <?php if (isset($_SESSION['sucesso'])): ?>
@@ -260,7 +271,7 @@
                 
 
                 <?php if (isset($_SESSION['delete'])): ?>
-                    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                    <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
                         <strong>✓ Sucesso!</strong> <?= $_SESSION['delete']; ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
@@ -297,9 +308,17 @@
                             <tr>
                                 <td><?=$trim['cod_gaveta'] ?></td>
                                 <td><?=$trim['capacidade'] ?></td>  
-                                <?php if($trim['estado'] == 'Livre'): ?>                              
+                                <?php if($trim['estado'] == 'livre'): ?>                              
                                     <td>
                                         <span class="badge bg-success">
+                                            <?=$trim['estado'] ?>
+                                        </span>
+                                    </td>
+                                <?php endif; ?>
+
+                                <?php if($trim['estado'] == 'ocupada'): ?>                              
+                                    <td>
+                                        <span class="badge bg-danger">
                                             <?=$trim['estado'] ?>
                                         </span>
                                     </td>
@@ -308,7 +327,8 @@
                                 <td><?=$trim['camara'] ?></td>
                                 <td><?=$trim['descricao'] ?></td>
                                 <td>
-                                    <a href="edit_falecido.php?id=<?= $trim['id_gaveta'] ?>" class="btn btn-outline-primary me-2"><i class="bi bi-pen-fill"></i></a>
+                                    <a href="edit_gaveta.php?id=<?= $trim['id_gaveta'] ?>" class="btn btn-sm btn-primary"><i class="bi bi-pen-fill"></i></a>
+                                    <a href="../gaveta.php?id=<?= $trim['id_gaveta'] ?>" class="btn btn-sm btn-danger"><i class="bi bi-trash3-fill"></i></a>
                                 </td> 
                             </tr>
                             <?php endforeach; ?>
