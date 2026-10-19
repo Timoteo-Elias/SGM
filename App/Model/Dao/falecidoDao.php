@@ -48,11 +48,38 @@
                 return false;
             }
         }
-        public function read(){
-            $sql = "SELECT *, TIMESTAMPDIFF(YEAR, data_nascimento, NOW()) AS idade FROM falecidos";
-            $res = Connect::getConn()->query($sql);
-            $falecido = $res->rowCount()>0 ? $res->fetchAll(PDO::FETCH_ASSOC) : [];
-            return $falecido;
+       
+        public function read($pesquisa = '') {
+
+            $conn = Connect::getConn();
+
+            if (trim($pesquisa) !== '') {
+
+                $sql = "SELECT *,
+                            TIMESTAMPDIFF(YEAR, data_nascimento, NOW()) AS idade
+                        FROM falecidos
+                        WHERE nome_completo LIKE :nome
+                        OR bi LIKE :bi OR codigo LIKE :codigo";
+
+                $stmt = $conn->prepare($sql);
+
+                $termo = '%' . trim($pesquisa) . '%';
+
+                $stmt->bindValue(':nome', $termo, PDO::PARAM_STR);
+                $stmt->bindValue(':bi', $termo, PDO::PARAM_STR);
+                $stmt->bindValue(':codigo', $termo, PDO::PARAM_STR);
+                $stmt->execute();
+
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+
+            $sql = "SELECT *,
+                        TIMESTAMPDIFF(YEAR, data_nascimento, NOW()) AS idade
+                    FROM falecidos";
+
+            $res = $conn->query($sql);
+
+            return $res->fetchAll(PDO::FETCH_ASSOC);
         }
         public function readTotal(){
             $sql = "SELECT COUNT(*) AS total_falecidos FROM falecidos";

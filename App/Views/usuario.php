@@ -4,15 +4,9 @@
     require_once __DIR__ . '/../Model/Dao/usuarioDao.php';
     require_once __DIR__ . '/../Model/Usuario.php';
     use Model\Usuario;
-    // 2. INSTANCIAR AS CAMADAS (O "Motor" do MVC)
-    // (Ajusta a forma como geras a tua conexão PDO se usares uma classe própria)
     $usuarioDao = new UsuarioDao(); 
     $UsuarioController = new UsuarioController($usuarioDao);
-    // 3. CRIAR A VARIÁVEL QUE A TABELA PRECISA
-    // Chamamos o método do controller para recolher os dados do banco
     $usuario = $UsuarioController->index(); 
-    // Daqui para baixo, o teu HTML/Bootstrap continua exatamente igual...
-
     if (session_status() === PHP_SESSION_NONE) {
         session_start(); 
     }
