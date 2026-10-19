@@ -213,7 +213,7 @@
                         </form> 
                     </div>
                     <div class="col-md-3">
-                        <a href="" class="btn btn-danger me-2"> <i class="bi bi-printer-fill"></i> imprimir</a>
+                        <a target="_blank" href="../pdf/depositantes_pdf.php" class="btn btn-danger me-2"> <i class="bi bi-printer-fill"></i> imprimir</a>
                         <a href="add_depositante.php" class="btn btn-success"><i class="bi bi-plus"></i> Registrar</a>
                     </div>
                 </div>

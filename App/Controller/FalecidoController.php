@@ -13,10 +13,8 @@ use Model\Falecido;
             $this->falecido = new Falecido();
         }
 
-        public function index(){
-            $falecidos = $this->falecidoDao->read();
-            require_once __DIR__ . '/../Views/falecidos.php';
-            return $falecidos;
+        public function index($pesquisa = '') {
+            return $this->falecidoDao->read($pesquisa);
         }
         public function lista(){
             return $this->falecidoDao->read();

@@ -4,15 +4,12 @@
     require_once __DIR__ . '/../Model/Dao/falecidoDao.php';
     require_once __DIR__ . '/../Model/falecido.php';
     use Model\Falecido;
-    // 2. INSTANCIAR AS CAMADAS (O "Motor" do MVC)
-    // (Ajusta a forma como geras a tua conexão PDO se usares uma classe própria)
+
     $falecidoDao = new FalecidoDao(); 
     $FalecidoController = new FalecidoController($falecidoDao);
-    // 3. CRIAR A VARIÁVEL QUE A TABELA PRECISA
-    // Chamamos o método do controller para recolher os dados do banco
-    $falecidos = $FalecidoController->index(); 
-    // Daqui para baixo, o teu HTML/Bootstrap continua exatamente igual...
-
+    $pesquisa = trim($_GET['pesquisa'] ?? '');
+    $falecidos = $FalecidoController->index($pesquisa);
+    
     if (session_status() === PHP_SESSION_NONE) {
         session_start(); 
     }
@@ -209,9 +206,9 @@
                         <h5>Lista de Falecidos</h5>
                     </div>
                     <div class="col-md-7">
-                        <form class=" ">
+                        <form method="GET" action="falecidos.php">
                             <div class="d-flex">
-                                <input type="search" name="pesquisa" class="form-control " placeholder="Buscar pelo nome ou Código">
+                                <input type="search" name="pesquisa" class="form-control " placeholder="Buscar pelo nome ou Código" value="<?= htmlspecialchars($_GET['pesquisa'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
                                 <button type="submit" class="btn btn-primary"> <i class="bi bi-search"></i></button>
                             </div>
                         </form> 

@@ -16,6 +16,14 @@
             require_once __DIR__ . '/../Views/depositantes.php';
             return $depositante;
         }
+        public function lista(){
+            return $this->depositanteDao->read();
+        }
+
+        public function confi(){
+            return $this->depositanteDao->Confi();
+        }
+
         public function getForId($id){
             $depositante = $this->depositanteDao->findById($id);
             require_once __DIR__ . '/../Views/edit_depositante.php';

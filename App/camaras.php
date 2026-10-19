@@ -22,7 +22,7 @@
         if ($sucesso) {
             $_SESSION['sucesso'] = "Câmara cadastrada com sucesso!";
         } else {
-            if (empty($_SESSION['erro'])) {
+            if(empty($_SESSION['erro'])) {
                 $_SESSION['erro'] = "Não foi possível salvar a câmara. Verifique os dados digitados.";
             }
         }

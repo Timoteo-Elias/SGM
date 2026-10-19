@@ -31,6 +31,12 @@
         header("location:views/falecidos.php");
         exit;
     }
+    
+    if (isset($_GET['pesquisa']) && trim($_GET['pesquisa']) !== '') {
+        $falecidocontroller->index(trim($_GET['pesquisa']));
+        require __DIR__.'/App/Views/falecidos.php';
+        exit;
+    }
 
     if(isset($_POST['id_falecido'])){
         $falecidocontroller->Update(
